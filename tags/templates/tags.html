@@ -9,7 +9,8 @@ $(document).ready(function() {
     $('.tagSummary a').click(function(e) {
         var tagName = $(this).attr("tagName");
         var sourceText = document.getElementById("source")
-        var regexpStr = '&lt;'+tagName + '|'+tagName+'&gt;';
+        //Match all "<tag/", "<tag ", "/tag>"
+        var regexpStr = '&lt;'+tagName + '&gt;|'+'&lt;'+tagName+'\\s|/'+tagName+'&gt;';
         var regex = new RegExp(regexpStr, "gi");
         sourceText.innerHTML = originalSource.innerHTML.replace(regex, function(matched) {return "<span class=\"highlightme \">" + matched + "</span>";});
        });
