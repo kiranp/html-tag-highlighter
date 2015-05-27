@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.11.3.min.js'></script>
+<script type='text/javascript'>//<![CDATA[
+$(document).ready(function() {
+    //Save originalSource in a variable, for reuse later
+    var originalSource = document.getElementById("originalSource")
+    $('.tagSummary a').click(function(e) {
+        var tagName = $(this).attr("tagName");
+        var sourceText = document.getElementById("source")
+        var regexpStr = '&lt;'+tagName + '|'+tagName+'&gt;';
+        var regex = new RegExp(regexpStr, "gi");
+        sourceText.innerHTML = originalSource.innerHTML.replace(regex, function(matched) {return "<span class=\"highlightme \">" + matched + "</span>";});
+       });
+});
+//]]>
+</script>
+
+       <form method="POST" class="post-form">{% csrf_token %}
+            {% for field in form.visible_fields %}
+                <div class="control-group {{ field.html_name }} {% if field.errors %}error{% endif %}">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field }}
+                        {% if field.errors %}
+                          <div class="alert alert-danger" role="alert">
+                                   {{ field.errors.as_text }}
+                          </div>
+                          {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="form-actions">
+                <input class="btn btn-primary btn-large" type="submit" value="Fetch HTML Source"/>
+            </div>
+        </form>
+
+        <div class="lead">
+          <div class="tagSummary">
+              {% if messages %}
+                  {% for message in messages %}
+                  <div class="alert alert-danger" role="alert">
+                           {{ message|safe }}
+                  </div>
+                  {% endfor %}
+              {% endif %}
+
+           <ul class="list-inline">
+             {% if tags %}
+                <div class="alert alert-success" role="alert">
+                  <li><h4>HTML tags present on the page.</h4> </li>
+                  <li><h5>Display Format: Tag (number of appearances)</h5></li>
+                  <li>{% for tag,count in tags  %}
+                     <a id="tagClick" href="javascript:void(0)"  tagName="{{ tag }}">{{ tag }}({{ count }})</a> 
+                    {% endfor %} 
+                  </li>
+                </div>
+              {% endif %}
+          </ul>
+          </div>
+        </div>
+
+    {% if source %}
+         <div class="alert alert-info" role="alert"><p>
+             <h4>HTML source:</h4> </p>
+             <div id="source" class="tag">
+                {% autoescape on %}
+                <pre class="prettyprint ">
+                {{ source }}
+                </pre>
+                {% endautoescape %}
+            </div>
+        </div>
+           <!-- store html in a hidden element, to avoid toggling highlightme styling -->
+            <div id="originalSource" style="display:none">
+                <pre class="prettyprint ">
+                {{ source }}
+                </pre>
+            </div>
+   {% endif %}
+{% endblock content %}

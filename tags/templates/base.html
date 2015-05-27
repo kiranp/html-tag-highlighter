@@ -1,0 +1,25 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+     <link rel="stylesheet" href="{% static 'css/tags.css' %}">
+     <!-- bootstrap's prettify, to style html code -->
+     <link rel="stylesheet" href="{% static 'css/prettify.css' %}">
+     <title>View HTML Tags</title>
+    </head>
+    <body>
+    <div class="page-header">
+        <h1><a href="/">Fetch HTML Tags</a></h1>
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
