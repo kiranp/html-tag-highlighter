@@ -5,7 +5,7 @@ from collections import Counter
 
 from .forms import TagsForm
 
-import logging
+#import logging
 import operator
 import requests
 import re
@@ -33,6 +33,9 @@ def index(request):
             messages = []
             tags = []
             inputUrl= form.cleaned_data['inputUrl']
+            if inputUrl and not (inputUrl.startswith(('http://','https://'))):
+                inputUrl = 'http://' + inputUrl
+
             try:
                 (inputSource, errorMessage) = getPageSource(inputUrl)
                 if inputSource:
